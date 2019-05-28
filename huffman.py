@@ -19,7 +19,10 @@ class Heap:
         
         
     def Minheapify(self):
+        
         i = len(self.lst)-1
+        if (len(self.lst) == 0):
+            return
         while i != 0:
             if i%2 == 0:
                 parrent_i = (i-1)//2
@@ -34,13 +37,40 @@ class Heap:
                 else:
                     parrent_i = parrent_i //2
             i = i -1
+            
+            
+    def MinExtract(self):
+        root = self.lst[0]
+        last_member = len(self.lst)-1
+        self.lst[0] , self.lst[last_member] = self.lst[last_member] , self.lst[0]
+        self.lst.pop()
+        self.Minheapify()
+        return root
+    
+    
+    def HeapSort(self):
+        mini_lst = []
+        leng = len(self.lst)
+        for i in range(leng):
+            mini_lst.append(heap.MinExtract())
+        return mini_lst
+
 
 def main():
 
-    lst = [3,2,1,5,-9,40,17,-9,99,10]
+    lst = [-9,8,-19,60,78,34,65,2,12,30]
     print(lst)
     heap = Heap(lst)
     print(heap.lst)
+    mini = []
+    print(mini)
+    print(heap.lst)
+    leng = len(heap.lst)
+    for i in range(leng):
+        mini.append(heap.MinExtract())
+    print(mini)
+    
+    
         
     
 if __name__ == "__main__":
