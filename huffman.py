@@ -5,20 +5,19 @@ Created on Fri May 24 18:41:44 2019
 
 @author: negin
 """
-class Node :
-
-    def __init__(self, key, value, left, right) :
-        self.value = value
-        self.left = left
-        self.right = right
-
-
+# class Node :
+#     def __init__(self, key, value, left, right) :
+#         self.value = value
+#         self.left = left
+#         self.right = right
+        
+        
 class Heap:
     def __init__(self, lst):
         self.lst = lst
         self.Minheapify()
-
-  
+        
+        
     def Minheapify(self):
         i = len(self.lst)-1
         while i != 0:
@@ -35,15 +34,6 @@ class Heap:
                 else:
                     parrent_i = parrent_i //2
             i = i -1
-       
-
-def frequency(file):
-    freq = dict()
-    text_file = file.read()
-    for i in text_file:
-        freq[i] = freq.get(i,0) + 1
-    return freq
-
 
 def main():
 
@@ -54,11 +44,4 @@ def main():
         
     
 if __name__ == "__main__":
-    main()
-    
-        
-    
-    
-    
-        
-    
+    main() 
