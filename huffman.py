@@ -3,75 +3,99 @@
 """
 Created on Fri May 24 18:41:44 2019
 
-@author: negin
+@author: negin Aryapour
 """
-# class Node :
-#     def __init__(self, key, value, left, right) :
-#         self.value = value
-#         self.left = left
-#         self.right = right
+
         
         
-class Heap:
-    def __init__(self, lst):
-        self.lst = lst
-        self.Minheapify()
-        
-        
-    def Minheapify(self):
-        
-        i = len(self.lst)-1
-        if (len(self.lst) == 0):
-            return
-        while i != 0:
-            if i%2 == 0:
-                parrent_i = (i-1)//2
+from heap import Heap
+from TreeClass import *
+import re
+  
+            
+def frequency(file):
+    freq = dict()
+    text_file = file.read()
+    for i in text_file[:-1]:
+        freq[i] = freq.get(i, 0) + 1
+    freq['\0'] = 1
+    return freq
+
+
+def make_zip(dic, file):
+#    print(dic)
+    temp = ""
+    zip_file = open("Zip.txt","w")
+    base_file = open(file,"r")
+    base_file_txt = base_file.read()
+    for i in base_file_txt[:-1]:
+        temp += dic[i][1]
+    temp += dic['\0'][1]
+    temp += (8 -(len(temp)%8))* "0"
+    j = 0
+    char = ""
+    string = ""
+    for i in range(len(temp)//8):
+        string = temp[j:j+8]
+        a = int(string, 2)
+        c = chr(a)
+        char += c
+        j +=8
+    zip_file.write(char) 
+    zip_file.close()
+    base_file.close()
+
+
+def unZip(huffmanTxtFile, zipTxtFile):
+    dic = dict()
+    code = ""
+    unzipedFile = open("Input.txt", "w")
+    unzip_txt = ""
+    hfile = open(huffmanTxtFile,"r")
+    zfile = open(zipTxtFile,"r")
+    zfile_txt = zfile.read()
+    for line in hfile:
+        ls = re.split(r'\t+', line)
+        dic[ls[2][:-1]] = ls[0]
+    for i in zfile_txt:
+        code += '{0:08b}'.format(ord(i))
+    c = ""
+    for i in code:
+        if c in dic:
+            if dic[c] == 'CR':
+                unzip_txt += '\n'
+            elif dic[c] == 'EOF':
+                unzip_txt += '\0'
+                break
             else:
-                parrent_i = i//2
-            j = i
-            while parrent_i >= 0 and self.lst[j] < self.lst[parrent_i]:
-                self.lst[j] , self.lst[parrent_i] = self.lst[parrent_i] , self.lst[j]
-                j = parrent_i 
-                if parrent_i %2 == 0:
-                    parrent_i = (parrent_i -1)//2
-                else:
-                    parrent_i = parrent_i //2
-            i = i -1
-            
-            
-    def MinExtract(self):
-        root = self.lst[0]
-        last_member = len(self.lst)-1
-        self.lst[0] , self.lst[last_member] = self.lst[last_member] , self.lst[0]
-        self.lst.pop()
-        self.Minheapify()
-        return root
+                unzip_txt += dic[c]
+            c = i
+        else:
+            c+=i
+    unzipedFile.write(unzip_txt)  
     
     
-    def HeapSort(self):
-        mini_lst = []
-        leng = len(self.lst)
-        for i in range(leng):
-            mini_lst.append(heap.MinExtract())
-        return mini_lst
-
-
 def main():
+    lst = []
+    tree = Tree(None)
+    file = open("Input.txt", "r")
+                                    #claculate the frequency of each diffrent character of input.txt file
+    frequen = frequency(file)
+    file.close()
+                                    #make heap of each diffrent characters              
+    for i in frequen:
+        lst.append(Node(i, frequen[i], None, None))
+    h = Heap(lst)
+    while len(h.heap) > 2:
+        left_node = h.pop()
+        right_node = h.pop()
+        root_node = tree.add(left_node, right_node)
+        h.push(root_node)
+    tree.search(tree.root,"",0)
+    tree.write_huffmanfile("Huffman.txt")
+    make_zip(tree.dic, "Input.txt")
+    unZip("Huffman.txt", "Zip.txt")
+    
 
-    lst = [-9,8,-19,60,78,34,65,2,12,30]
-    print(lst)
-    heap = Heap(lst)
-    print(heap.lst)
-    mini = []
-    print(mini)
-    print(heap.lst)
-    leng = len(heap.lst)
-    for i in range(leng):
-        mini.append(heap.MinExtract())
-    print(mini)
-    
-    
-        
-    
 if __name__ == "__main__":
     main() 
