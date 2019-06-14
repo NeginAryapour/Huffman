@@ -60,6 +60,8 @@ def unZip(huffmanTxtFile, zipTxtFile):
     for i in zfile_txt:
         code += '{0:08b}'.format(ord(i))
     c = ""
+    print(dic)
+#    print
     for i in code:
         if c in dic:
             if dic[c] == 'CR':
